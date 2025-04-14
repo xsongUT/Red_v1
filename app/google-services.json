@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "529726028205",
+    "project_id": "musicredv1",
+    "storage_bucket": "musicredv1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529726028205:android:421349e8a5c6673d7dc924",
+        "android_client_info": {
+          "package_name": "com.example.red_v1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXaNSQEDj6mxgY_nduqqe20a8-8IXV5Ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
