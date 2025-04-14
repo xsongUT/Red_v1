@@ -1,5 +1,7 @@
 package com.example.red_v1
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,7 +23,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.example.red_v1.databinding.ActivityLoginBinding
 import android.widget.Toast
-import android.widget.LinearLayout as LinearLayout1
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -34,11 +36,13 @@ class LoginActivity : AppCompatActivity() {
            finish()
        }
     }
-    val emailET = findViewById<TextInputEditText>(R.id.emailET)
-    val emailTIL = findViewById<TextInputLayout>(R.id.emailTIL)
-    val passwordET = findViewById<TextInputEditText>(R.id.passwordET)
-    val passwordTIL = findViewById<TextInputLayout>(R.id.passwordTIL)
-    val loginProgressLayout = findViewById<LinearLayout1>(R.id.loginProgressLayout)
+
+    private lateinit var emailET: TextInputEditText
+    private lateinit var emailTIL: TextInputLayout
+    private lateinit var passwordET: TextInputEditText
+    private lateinit var passwordTIL: TextInputLayout
+    private lateinit var loginProgressLayout: LinearLayout
+
 
     private lateinit var binding: ActivityLoginBinding
 
@@ -51,9 +55,20 @@ class LoginActivity : AppCompatActivity() {
         super.onStop()
         firestoreAuth.removeAuthStateListener(firebaseAuthListener)
     }
+
+    companion object{
+        fun newIntent(context: Context): Intent = Intent(context, LoginActivity::class.java)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        emailET = findViewById<TextInputEditText>(R.id.emailET)
+        emailTIL = findViewById<TextInputLayout>(R.id.emailTIL)
+        passwordET = findViewById<TextInputEditText>(R.id.passwordET)
+        passwordTIL = findViewById<TextInputLayout>(R.id.passwordTIL)
+        loginProgressLayout = findViewById<LinearLayout>(R.id.loginProgressLayout)
 
         setTextChangeListener(emailET,emailTIL)
         setTextChangeListener(passwordET,passwordTIL)
