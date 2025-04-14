@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
        val user = firestoreAuth.currentUser?.uid
        user?.let{
-            startActivity(HomeActivity.newIntent(this))
+           startActivity(HomeActivity.newIntent(this))
            finish()
        }
     }
