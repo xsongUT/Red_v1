@@ -113,6 +113,10 @@ class LoginActivity : AppCompatActivity() {
                         loginProgressLayout.visibility =View.GONE
                         Toast.makeText(this@LoginActivity,"login error: ${task.exception?.localizedMessage}",Toast.LENGTH_SHORT).show()
                     }
+                    else{
+                        startActivity(HomeActivity.newIntent(this))
+                        finish()
+                    }
                 }
                 .addOnFailureListener{e ->
                     e.printStackTrace()

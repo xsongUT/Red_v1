@@ -21,6 +21,13 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        // Check if the user is logged in
+//        if (firebaseAuth.currentUser == null) {
+//            // User is not logged in, redirect to LoginActivity
+//            startActivity(LoginActivity.newIntent(this))
+//            finish() // Close HomeActivity
+//        }
+
     }
     fun onLogout(v:View){
         firebaseAuth.signOut()
