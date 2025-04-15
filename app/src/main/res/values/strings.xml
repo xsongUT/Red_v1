@@ -5,4 +5,8 @@
     <string name="button_login">Login</string>
     <string name="text_signup">No account? Go to Signup</string>
     <string name="title_image_desc">App title logo</string>
+    <string name="hint_username">Username</string>
+    <string name="button_signup">Signup</string>
+    <string name="text_login">Already have an account? Go to Login.</string>
+    <string name="hint_search">Search</string>
 </resources>

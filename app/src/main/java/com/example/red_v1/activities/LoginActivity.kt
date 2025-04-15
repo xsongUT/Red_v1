@@ -1,21 +1,11 @@
-package com.example.red_v1
+package com.example.red_v1.activities
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.activity.ComponentActivity
 
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.red_v1.ui.theme.Red_v1Theme
 import android.view.View
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputEditText
@@ -25,6 +15,7 @@ import com.example.red_v1.databinding.ActivityLoginBinding
 import android.widget.Toast
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.example.red_v1.R
 
 
 class LoginActivity : AppCompatActivity() {
@@ -127,7 +118,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun goToSignup(v:View){
-
+        startActivity(SignupActivity.newIntent(this))
+        finish()
     }
 
 

@@ -1,14 +1,12 @@
-package com.example.red_v1
+package com.example.red_v1.activities
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 import android.content.Intent
 import android.content.Context
 import android.view.View
+import com.example.red_v1.R
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -21,12 +19,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Check if the user is logged in
-//        if (firebaseAuth.currentUser == null) {
-//            // User is not logged in, redirect to LoginActivity
-//            startActivity(LoginActivity.newIntent(this))
-//            finish() // Close HomeActivity
-//        }
 
     }
     fun onLogout(v:View){
