@@ -6,40 +6,101 @@ import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.content.Context
 import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.example.red_v1.R
+import com.example.red_v1.databinding.ActivityHomeBinding
+import com.example.red_v1.fragments.HomeFragment
+import com.example.red_v1.fragments.MyActivityFragment
+import com.example.red_v1.fragments.SearchFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.android.material.tabs.TabLayout
 
 
 
 
-class HomeActivity : AppCompatActivity() {
-    private val firebaseAuth = FirebaseAuth.getInstance()
 
+class HomeActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityHomeBinding
+    private lateinit var tabLayout: TabLayout
+    private var sectionPagerAdapter : SectionPageAdapter? = null
+    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val homeFragment = HomeFragment()
+    private val searchFragment = SearchFragment()
+    private val myActivityFragment = MyActivityFragment()
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        sectionPagerAdapter = SectionPageAdapter(supportFragmentManager)
+        val container = binding.container
+        //val tabs = binding.tabs
+        // Initialize TabLayout
+        tabLayout = binding.tabs
+        container.adapter = sectionPagerAdapter
+        container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
-        val tabLayout = findViewById<TabLayout>(R.id.tabs)
 
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.selector_home))
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.selector_search))
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.selector_myactivity))
+        // Add tabs
         val tabHome = tabLayout.newTab().setIcon(R.drawable.selector_home)
-        val tabSearch = tabLayout.newTab().setIcon(R.drawable.selector_search)
-        val tabMyActivity = tabLayout.newTab().setIcon(R.drawable.selector_myactivity)
-
+        tabHome.contentDescription = "Home"
         tabLayout.addTab(tabHome)
-        tabLayout.addTab(tabSearch)
-        tabLayout.addTab(tabMyActivity)
 
+        val tabSearch = tabLayout.newTab().setIcon(R.drawable.selector_search)
+        tabSearch.contentDescription = "Search"
+        tabLayout.addTab(tabSearch)
+
+        val tabActivity = tabLayout.newTab().setIcon(R.drawable.selector_myactivity)
+        tabActivity.contentDescription = "My Activity"
+        tabLayout.addTab(tabActivity)
+
+
+        tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
+        tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+        })
+
+        binding.logo.setOnClickListener{view ->
+            startActivity((ProfileActivity.newIntent(this)))
+        }
 
     }
     fun onLogout(v:View){
         firebaseAuth.signOut()
         startActivity(LoginActivity.newIntent(this))
         finish()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(userId ==null){
+            startActivity(LoginActivity.newIntent(this))
+            finish()
+        }
+    }
+
+    inner class SectionPageAdapter(fm:FragmentManager) : FragmentPagerAdapter(fm){
+        override fun getCount() = 3
+
+        override fun getItem(position: Int): Fragment {
+            return when(position){
+                0 -> homeFragment
+                1 -> searchFragment
+                else -> myActivityFragment
+            }
+        }
+
     }
 
 

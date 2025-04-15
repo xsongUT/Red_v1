@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         tools:context=".activities.HomeActivity">
 
     <androidx.cardview.widget.CardView
@@ -72,13 +73,35 @@
     <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/standard_height"
+            android:layout_height="50dp"
             android:layout_marginBottom="@dimen/grid_2x"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:tabIndicator="@null">
-
-
+            >
     </com.google.android.material.tabs.TabLayout>
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"
+        app:layout_constraintTop_toBottomOf="@id/cardView">
+
+    </androidx.viewpager.widget.ViewPager>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/grid_3x"
+        app:srcCompat="@drawable/feather" />
+
 
 
     <LinearLayout
@@ -89,7 +112,8 @@
         android:gravity="center"
         android:elevation="5dp"
         android:visibility="gone"
-        android:background="@color/transparent_gray">
+        android:background="@color/transparent_gray"
+        >
 
         <ProgressBar
             android:layout_width="wrap_content"
