@@ -44,19 +44,7 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        // Initialize the ActivityResultLauncher
-//        pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//            if (result.resultCode == Activity.RESULT_OK) {
-//                val data: Intent? = result.data
-//                data?.data?.let { uri ->
-//                    // Handle the selected image URI here
-//                    binding.photoIV.setImageURI(uri) // Example: Set the image to an ImageView
-//                    // You can now work with the 'uri' to load or process the image.
-//                }
-//            } else {
-//                // Handle the case where the user cancelled the image selection
-//            }
-//        }
+
 
         val profileProgressLayout = binding.profileProgressLayout
 

@@ -80,6 +80,7 @@ class HomeActivity : AppCompatActivity() {
         binding.fab.setOnClickListener {
             startActivity(RedActivity.newIntent(this,userId,user?.username))
         }
+        binding.homeProgressLayout.setOnTouchListener { v, event -> true }
     }
 
 
