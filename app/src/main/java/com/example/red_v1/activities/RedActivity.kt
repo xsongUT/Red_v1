@@ -25,6 +25,9 @@ class RedActivity : AppCompatActivity() {
 
     }
 
+    fun postRed(v:View){
+
+    }
 
 
     companion object {

@@ -6,6 +6,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         tools:context=".activities.RedActivity">
 
     <EditText
@@ -26,7 +27,43 @@
         android:onClick="addImage"
         app:layout_constraintTop_toBottomOf="@+id/RedText" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/send"
+        android:onClick="postRed"
+        android:layout_margin="@dimen/grid_3x"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/fabSend"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/camera"
+        android:onClick="addImage"
+        android:layout_margin="@dimen/grid_3x"/>
+
+
+    <LinearLayout
+        android:id="@+id/redProgressLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:elevation="5dp"
+        android:visibility="gone"
+        android:background="@color/transparent_gray"
+        >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
