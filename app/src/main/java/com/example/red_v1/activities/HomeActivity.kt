@@ -14,11 +14,12 @@ import com.example.red_v1.databinding.ActivityHomeBinding
 import com.example.red_v1.fragments.HomeFragment
 import com.example.red_v1.fragments.MyActivityFragment
 import com.example.red_v1.fragments.SearchFragment
+import com.example.red_v1.util.DATA_USERS
+import com.example.red_v1.util.User
+import com.example.red_v1.util.loadUrl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.android.material.tabs.TabLayout
-
-
-
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class HomeActivity : AppCompatActivity() {
@@ -26,10 +27,12 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var tabLayout: TabLayout
     private var sectionPagerAdapter : SectionPageAdapter? = null
     private val firebaseAuth = FirebaseAuth.getInstance()
+    private  val firebaseDB = FirebaseFirestore.getInstance()
     private val homeFragment = HomeFragment()
     private val searchFragment = SearchFragment()
     private val myActivityFragment = MyActivityFragment()
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid
+    private var userId = FirebaseAuth.getInstance().currentUser?.uid
+    private var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,20 +77,36 @@ class HomeActivity : AppCompatActivity() {
         binding.logo.setOnClickListener{view ->
             startActivity((ProfileActivity.newIntent(this)))
         }
+        binding.fab.setOnClickListener {
+            startActivity(RedActivity.newIntent(this,userId,user?.username))
+        }
+    }
 
-    }
-    fun onLogout(v:View){
-        firebaseAuth.signOut()
-        startActivity(LoginActivity.newIntent(this))
-        finish()
-    }
 
     override fun onResume() {
         super.onResume()
+        userId = FirebaseAuth.getInstance().currentUser?.uid
         if(userId ==null){
             startActivity(LoginActivity.newIntent(this))
             finish()
         }
+
+        populate()
+    }
+
+    fun populate(){
+        binding.homeProgressLayout.visibility = View.VISIBLE
+        firebaseDB.collection(DATA_USERS).document(userId!!).get()
+            .addOnSuccessListener { documentSnapshot ->
+                binding.homeProgressLayout.visibility = View.GONE
+                user = documentSnapshot.toObject(User::class.java)
+                user?.imageUrl?.let {
+                    binding.logo.loadUrl(it, R.drawable.logo)
+                }
+            }.addOnFailureListener { e ->
+                e.printStackTrace()
+                finish()
+            }
     }
 
     inner class SectionPageAdapter(fm:FragmentManager) : FragmentPagerAdapter(fm){
