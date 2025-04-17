@@ -90,9 +90,10 @@ class HomeActivity : AppCompatActivity() {
         if(userId ==null){
             startActivity(LoginActivity.newIntent(this))
             finish()
-        }
+        } else {
 
-        populate()
+            populate()
+        }
     }
 
     fun populate(){
@@ -111,7 +112,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     inner class SectionPageAdapter(fm:FragmentManager) : FragmentPagerAdapter(fm){
-        override fun getCount() = 3
+
 
         override fun getItem(position: Int): Fragment {
             return when(position){
@@ -120,7 +121,7 @@ class HomeActivity : AppCompatActivity() {
                 else -> myActivityFragment
             }
         }
-
+        override fun getCount() = 3
     }
 
 

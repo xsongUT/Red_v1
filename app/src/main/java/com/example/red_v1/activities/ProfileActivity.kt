@@ -68,9 +68,9 @@ class ProfileActivity : AppCompatActivity() {
                 val user = documentSnapshot.toObject(User::class.java)
                 binding.usernameET.setText(user?.username, TextView.BufferType.EDITABLE)
                 binding.emailET.setText(user?.email, TextView.BufferType.EDITABLE)
-                imageUrl = user?.imageUrl
-                imageUrl?.let {
-                        binding.photoIV.loadUrl(user?.imageUrl, R.drawable.logo)
+                if (!user?.imageUrl.isNullOrEmpty()) {
+                    imageUrl = user?.imageUrl
+                    binding.photoIV.loadUrl(imageUrl, R.drawable.logo)
                 }
                 binding.profileProgressLayout.visibility = View.GONE
             }.addOnFailureListener{e ->
@@ -88,15 +88,17 @@ class ProfileActivity : AppCompatActivity() {
         map[DATA_USER_USERNAME] = username
         map[DATA_USER_EMAIL] = email
 
+
         //update the database
         firebaseDB.collection(DATA_USERS).document(userId!!).update(map)
             .addOnSuccessListener {
-                Toast.makeText(this,"Update successful", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Update successful for user: $userId", Toast.LENGTH_SHORT).show()
+
                 finish()
             }.addOnFailureListener{e ->
                 //let the user try again
                 e.printStackTrace()
-                Toast.makeText(this,"Update failed.Please try again", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Update failed.Please try again for user: $userId", Toast.LENGTH_SHORT).show()
                 binding.profileProgressLayout.visibility = View.GONE
             }
 
@@ -145,7 +147,10 @@ class ProfileActivity : AppCompatActivity() {
 
     fun onSignout(v:View){
         firebaseAuth.signOut()
-        finish()
+        val login_intent = Intent(this, LoginActivity::class.java)
+        login_intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(login_intent)
+        //finish()
     }
 
     companion object{
