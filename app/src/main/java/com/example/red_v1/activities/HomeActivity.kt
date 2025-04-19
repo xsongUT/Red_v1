@@ -73,6 +73,22 @@ class HomeActivity : AppCompatActivity() {
         tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
         tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                when(tab?.position){
+                    0 -> {
+                        binding.titleBar.visibility = View.VISIBLE
+                        binding.titleBar.text = "Home"
+                        binding.searchBar.visibility = View.GONE
+                    }
+                    1 -> {
+                        binding.titleBar.visibility = View.GONE
+                        binding.searchBar.visibility = View.VISIBLE
+                    }
+                    2 -> {
+                        binding.titleBar.visibility = View.VISIBLE
+                        binding.titleBar.text = "My Activity"
+                        binding.searchBar.visibility = View.GONE
+                    }
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {

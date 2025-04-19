@@ -39,9 +39,9 @@ class SearchFragment : RedFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
-//        _binding = FragmentSearchBinding.inflate(inflater, container, false)
-//        return binding.root
+//        return inflater.inflate(R.layout.fragment_search, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
 
     }
 

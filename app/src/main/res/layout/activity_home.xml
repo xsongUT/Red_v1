@@ -50,6 +50,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="60dp"
             android:layout_marginLeft="60dp"
+            android:visibility="gone"
             app:cardCornerRadius="@dimen/standard_corner_radius">
 
             <EditText
