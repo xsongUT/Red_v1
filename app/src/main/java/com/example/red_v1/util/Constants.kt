@@ -13,6 +13,7 @@ val DATA_IMAGES = "ProfileImages"
 val DATA_REDS = "Reds"
 val DATA_RED_USER_IDS = "userIds"
 val DATA_RED_HASHTAGS = "hashtags"
-val DTAT_RED_LIKES = "likes"
+val DATA_REDS_LIKES = "likes"
 
 val DATA_RED_IMAGES = "RedImages"
+

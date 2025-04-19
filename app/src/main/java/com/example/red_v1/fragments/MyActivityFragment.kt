@@ -10,12 +10,16 @@ import com.example.red_v1.R
 
 class MyActivityFragment : RedFragment() {
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_activity, container, false)
+    }
+
+    override fun updateList() {
     }
 
 

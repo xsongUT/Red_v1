@@ -19,4 +19,9 @@ class HomeFragment : RedFragment() {
     }
 
 
+    override fun updateList() {
+
+    }
+
+
 }

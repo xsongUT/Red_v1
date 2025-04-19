@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.red_v1.R
@@ -14,8 +15,11 @@ import com.example.red_v1.adapters.RedListAdapter
 import com.example.red_v1.databinding.ActivityHomeBinding
 import com.example.red_v1.databinding.FragmentSearchBinding
 import com.example.red_v1.listeners.RedListener
+import com.example.red_v1.listeners.RedListenerImpl
 import com.example.red_v1.util.DATA_REDS
 import com.example.red_v1.util.DATA_RED_HASHTAGS
+import com.example.red_v1.util.DATA_USERS
+import com.example.red_v1.util.DATA_USER_HASTAGS
 import com.example.red_v1.util.Red
 import com.example.red_v1.util.User
 import com.google.firebase.auth.FirebaseAuth
@@ -25,11 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 class SearchFragment : RedFragment() {
 
     private var currentHashtag = ""
-    private var redsAdapter: RedListAdapter? = null
-    private var currentUser: User? = null
-    private val firebaseDB = FirebaseFirestore.getInstance()
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid
-    private val listener: RedListener? = null
+
+    private var hashtagFollowed =false
 
 
     private var _binding: FragmentSearchBinding? = null
@@ -48,6 +49,7 @@ class SearchFragment : RedFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        listener = RedListenerImpl(binding.redList,currentUser,callback)
         redsAdapter = RedListAdapter(userId!!, arrayListOf())
         redsAdapter?.setListener(listener)
         binding.redList?.apply {
@@ -56,8 +58,30 @@ class SearchFragment : RedFragment() {
             addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
         }
 
-        binding.swipeRefresh.isRefreshing = false
-        updateList()
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            updateList()
+        }
+        binding.followHashtag.setOnClickListener{
+            binding.followHashtag.isClickable = false
+            val followed = currentUser?.followHashtags
+            if (hashtagFollowed){
+                followed?.remove(currentHashtag)
+            }else {
+                followed?.add(currentHashtag)
+            }
+
+            firebaseDB.collection(DATA_USERS).document(userId).update(DATA_USER_HASTAGS,followed)
+                    .addOnSuccessListener {
+                        callback?.onUserUpdated()
+                        binding.followHashtag.isClickable = true
+                    }
+                    .addOnFailureListener { e ->
+                        e.printStackTrace()
+                        binding.followHashtag.isClickable = true
+                    }
+
+        }
     }
 
     override fun onDestroyView() {
@@ -66,13 +90,14 @@ class SearchFragment : RedFragment() {
     }
 
 
+
     fun newHashtag(term:String){
         currentHashtag = term
         binding.followHashtag.visibility = View.VISIBLE
         updateList()
     }
 
-    fun updateList(){
+    override  fun updateList(){
         binding.redList?.visibility = View.GONE
         firebaseDB.collection(DATA_REDS).whereArrayContains(DATA_RED_HASHTAGS,currentHashtag).get()
             .addOnSuccessListener { list ->
@@ -88,5 +113,18 @@ class SearchFragment : RedFragment() {
             .addOnFailureListener { e ->
                 e.printStackTrace()
             }
+        updateFollowDrawable()
+    }
+
+    private fun updateFollowDrawable(){
+        hashtagFollowed = currentUser?.followHashtags?.contains(currentHashtag) == true
+        context?.let{
+            if(hashtagFollowed){
+                binding.followHashtag.setImageDrawable(ContextCompat.getDrawable(it,R.drawable.follow))
+            }else{
+                binding.followHashtag.setImageDrawable(ContextCompat.getDrawable(it,R.drawable.follow_inactive))
+            }
+        }
+
     }
 }

@@ -17,7 +17,9 @@ import com.example.red_v1.R
 import com.example.red_v1.databinding.ActivityHomeBinding
 import com.example.red_v1.fragments.HomeFragment
 import com.example.red_v1.fragments.MyActivityFragment
+import com.example.red_v1.fragments.RedFragment
 import com.example.red_v1.fragments.SearchFragment
+import com.example.red_v1.listeners.HomeCallback
 import com.example.red_v1.util.DATA_USERS
 import com.example.red_v1.util.User
 import com.example.red_v1.util.loadUrl
@@ -27,7 +29,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), HomeCallback {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var tabLayout: TabLayout
     private var sectionPagerAdapter : SectionPageAdapter? = null
@@ -38,6 +40,7 @@ class HomeActivity : AppCompatActivity() {
     private val myActivityFragment = MyActivityFragment()
     private var userId = FirebaseAuth.getInstance().currentUser?.uid
     private var user: User? = null
+    private var currentFragment: RedFragment = homeFragment
 
 
 
@@ -78,15 +81,18 @@ class HomeActivity : AppCompatActivity() {
                         binding.titleBar.visibility = View.VISIBLE
                         binding.titleBar.text = "Home"
                         binding.searchBar.visibility = View.GONE
+                        currentFragment = homeFragment
                     }
                     1 -> {
                         binding.titleBar.visibility = View.GONE
                         binding.searchBar.visibility = View.VISIBLE
+                        currentFragment = searchFragment
                     }
                     2 -> {
                         binding.titleBar.visibility = View.VISIBLE
                         binding.titleBar.text = "My Activity"
                         binding.searchBar.visibility = View.GONE
+                        currentFragment = myActivityFragment
                     }
                 }
             }
@@ -134,25 +140,36 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    override fun onUserUpdated() {
+        populate()
+    }
+
+    override fun onRefresh() {
+        currentFragment.updateList()
+    }
+
     fun populate(){
         binding.homeProgressLayout.visibility = View.VISIBLE
-        Log.d("Firestore", "Starting Firestore fetch")
+
         firebaseDB.collection(DATA_USERS).document(userId!!).get()
             .addOnSuccessListener { documentSnapshot ->
-                Log.d("FIRESTORE_RAW", "Data: ${documentSnapshot.data}")
                 binding.homeProgressLayout.visibility = View.GONE
                 user = documentSnapshot.toObject(User::class.java)
-                Log.d("UUUUUUUUUUU", "User object: $user") // Log the user object after conversion
                 user?.imageUrl?.let {
                     binding.logo.loadUrl(it, R.drawable.logo)
                 }
+                updateFragmentUser()
             }.addOnFailureListener { e ->
-                Log.d("PPPPPPAAAAAADDDDDD", "Error fetching user data: ${e.message}", e)
                 e.printStackTrace()
                 finish()
             }
-        Log.d("Firestore", "Firestore call initiated")
-        Log.d("Firestore", "After Firestore fetch called")
+    }
+
+    fun updateFragmentUser(){
+        homeFragment.setUser(user)
+        searchFragment.setUser(user)
+        myActivityFragment.setUser(user)
+        currentFragment.updateList()
     }
 
     inner class SectionPageAdapter(fm:FragmentManager) : FragmentPagerAdapter(fm){
