@@ -8,6 +8,8 @@
         android:fitsSystemWindows="true"
         tools:context=".activities.HomeActivity">
 
+
+    
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
