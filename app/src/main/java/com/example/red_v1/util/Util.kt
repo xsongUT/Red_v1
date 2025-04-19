@@ -8,6 +8,8 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 
 import com.example.red_v1.R
 import android.content.Context
+import java.text.DateFormat
+import java.util.Date
 
 
 fun ImageView.loadUrl(url: String?, errorDrawable: Int = R.drawable.empty){
@@ -24,4 +26,12 @@ fun progressDrawable(context: Context): CircularProgressDrawable{
             centerRadius = 30f
             start()
         }
+}
+
+fun getDate(s:Long?):String{
+    s?.let{
+        val df = DateFormat.getDateInstance()
+        return  df.format(Date(it))
+    }
+    return "unknown"
 }
