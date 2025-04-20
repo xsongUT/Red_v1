@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.red_v1.util.DATA_REDS
 import com.example.red_v1.util.DATA_REDS_LIKES
 import com.example.red_v1.util.DATA_RED_IMAGES
+import com.example.red_v1.util.DATA_RED_USER_IDS
 import com.example.red_v1.util.Red
 import com.example.red_v1.util.User
 import com.google.firebase.auth.FirebaseAuth
@@ -37,5 +38,22 @@ class RedListenerImpl(val redList: RecyclerView, var user: User?, val callback:H
     }
 
     override fun onRepost(red: Red?) {
+        red?.let{
+            redList.isClickable = false
+            val reposts = red.userIds
+            if(reposts?.contains(userId) == true){
+                reposts?.remove(userId)
+            }else{
+                reposts?.add(userId!!)
+            }
+            firebaseDB.collection(DATA_REDS).document(red.redId!!).update(DATA_RED_USER_IDS,reposts)
+                .addOnSuccessListener {
+                    redList.isClickable = true
+                    callback?.onRefresh()
+                }
+                .addOnFailureListener {
+                    redList.isClickable = true
+                }
+        }
     }
 }
