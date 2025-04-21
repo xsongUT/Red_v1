@@ -66,6 +66,7 @@ class ProfileActivity : AppCompatActivity() {
         }
         populateInfo()
         binding.fabMap.setOnClickListener {
+            binding.fabMap.visibility = View.GONE
             val mapFragment = MapFragment()
 
             supportFragmentManager.beginTransaction()

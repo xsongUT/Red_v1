@@ -64,7 +64,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if (addresses.isNotEmpty()) {
             val address = addresses[0]
             val latLng = LatLng(address.latitude, address.longitude)
-
+            map.addMarker(MarkerOptions().position(latLng).title("${"%.3f".format(latLng.latitude)} ${"%.3f".format(latLng.longitude)}"))
             withContext(Dispatchers.Main) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f))
             }
@@ -101,8 +101,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 processAddresses(addresses)
                 Log.d("Geocoding1", "Geocoding result received: $addresses")
                 if (addresses.isNotEmpty()) {
-                    val address = addresses[0].getAddressLine(0) // 获取地址的第一行
-                    ViewModel.setAddress(address) // 将地址存储到 ViewModel 中
+                    val address = addresses[0].getAddressLine(0)
+                    ViewModel.setAddress(address)
                     Log.d("ProfileActivity2", "Extracted address: $address")
                 }
             }
@@ -130,39 +130,31 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
 
         map.setOnMapClickListener { latLng ->
-            // 如果起点为空，设置为当前点击的点
             if (startLatLng == null) {
                 startLatLng = latLng
                 map.addMarker(MarkerOptions().position(latLng).title("Start"))
             } else {
-                // 计算起点和终点之间的距离
                 val distance = calculateDistance(startLatLng!!, latLng)
                 Toast.makeText(requireContext(), "Distance: $distance meters", Toast.LENGTH_LONG).show()
 
-                // 绘制起点和终点之间的路线
                 drawRoute(startLatLng!!, latLng)
 
-                // 重置起点
                 startLatLng = null
             }
         }
         map.setOnMapClickListener { latLng ->
-            // 每次点击时将新坐标添加到 points 列表中
             points.add(latLng)
 
-            // 每次点击后调用 drawRoutePath 绘制路径
             drawRoutePath(points)
 
-            // 在点击位置添加标记
             map.addMarker(MarkerOptions().position(latLng).title("Point"))
 
-            // 如果需要计算第一个点击点和当前点击点之间的距离
             if (startLatLng == null) {
                 startLatLng = latLng
             } else {
                 val distance = calculateDistance(startLatLng!!, latLng)
-                Toast.makeText(requireContext(), "距离: $distance 米", Toast.LENGTH_LONG).show()
-                // 计算完距离后可以重置 startLatLng
+                Toast.makeText(requireContext(), "Distance: $distance meters", Toast.LENGTH_LONG).show()
+
                 startLatLng = null
             }
         }
