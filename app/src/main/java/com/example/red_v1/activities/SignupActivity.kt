@@ -86,7 +86,7 @@ class SignupActivity : AppCompatActivity() {
                     else{
                         val email = binding.emailET.text.toString()
                         val name = binding.usernameET.text.toString()
-                        val user = User(email, name, "", arrayListOf(), arrayListOf())
+                        val user = User(email, name, "", "",arrayListOf(), arrayListOf())
                         firebaseDB.collection(DATA_USERS).document(firestoreAuth.uid!!).set(user)
                     }
                     binding.signupProgressLayout.visibility =View.GONE

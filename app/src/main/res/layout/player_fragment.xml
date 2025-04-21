@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".fragments.PlayerFragment"
+    android:orientation="vertical"
+    android:layout_margin="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--Write me-->
+    <LinearLayout
+        android:id="@+id/info_section_row1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp" >
+
+        <TextView
+            android:id="@+id/playerCurrentSongTextInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Now Playing:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:layout_marginStart="16dp"/>
+
+        <TextView
+            android:id="@+id/playerCurrentSongText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="wait input"
+            android:textSize="15sp"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/info_section_row2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/playerNextSongTextInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next up:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:layout_marginStart="16dp"/>
+
+        <TextView
+            android:id="@+id/playerNextSongText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="wait input"
+            android:textSize="15sp"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playerRV"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="8dp">
+
+        <ImageButton
+            android:id="@+id/playerSkipBackButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_skip_previous_24"
+            android:contentDescription="Skip Backward"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:scaleType="fitXY"/>
+
+        <ImageButton
+            android:id="@+id/playerPlayPauseButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            android:contentDescription="Play/Pause"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_play_arrow_black_24dp"
+            android:scaleType="fitXY"/>
+
+        <ImageButton
+            android:id="@+id/playerSkipForwardButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_skip_next_24"
+            android:contentDescription="Skip Forward"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:scaleType="fitXY"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/loopIndicator"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:text="L"
+            android:textSize="36sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingEnd="8dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/playerPermuteButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_shuffle_black_24dp"
+            android:contentDescription="Permute Button"
+            android:background="?android:attr/selectableItemBackground"
+            android:scaleType="fitXY" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/playerTimePassedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_weight="0"
+            android:layout_gravity="center"/>
+
+        <SeekBar
+            android:id="@+id/playerSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:layout_weight="1"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/playerTimeRemainingText"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_weight="0"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

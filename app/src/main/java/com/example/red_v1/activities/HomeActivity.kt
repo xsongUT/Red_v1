@@ -16,7 +16,9 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.example.red_v1.R
 import com.example.red_v1.databinding.ActivityHomeBinding
 import com.example.red_v1.fragments.HomeFragment
+import com.example.red_v1.fragments.MapFragment
 import com.example.red_v1.fragments.MyActivityFragment
+import com.example.red_v1.fragments.PlayerFragment
 import com.example.red_v1.fragments.RedFragment
 import com.example.red_v1.fragments.SearchFragment
 import com.example.red_v1.listeners.HomeCallback
@@ -74,6 +76,17 @@ class HomeActivity : AppCompatActivity(), HomeCallback {
 
 
         tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
+
+
+        binding.fabMusic.setOnClickListener {
+            // Replace the current fragment with PlayerFragment
+            val playerFragment = PlayerFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container2, playerFragment)  // Replace the container with PlayerFragment
+                .addToBackStack(null)  // Optionally add the transaction to the back stack
+                .commit()
+        }
+
         tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when(tab?.position){

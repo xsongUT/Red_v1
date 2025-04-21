@@ -6,15 +6,19 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.red_v1.MainViewModel
 import com.example.red_v1.R
 import com.example.red_v1.databinding.ActivityHomeBinding
 import com.example.red_v1.databinding.ActivityProfileBinding
+import com.example.red_v1.fragments.MapFragment
 import com.example.red_v1.util.DATA_IMAGES
 import com.example.red_v1.util.DATA_USERS
 import com.example.red_v1.util.DATA_USER_EMAIL
@@ -26,7 +30,8 @@ import com.example.red_v1.util.loadUrl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-
+import androidx.lifecycle.Observer
+import com.example.red_v1.util.DATA_USER_LOCALNAME
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -38,6 +43,7 @@ class ProfileActivity : AppCompatActivity() {
     private var imageUrl: String? = null
 //    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
 
+    private lateinit var ViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +65,23 @@ class ProfileActivity : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_CODE_PHOTO)
         }
         populateInfo()
+        binding.fabMap.setOnClickListener {
+            val mapFragment = MapFragment()
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, mapFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+        ViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        ViewModel.address.observe(this, Observer { newAddress ->
+
+            binding.baseET.setText(newAddress)
+            Log.d("ProfileActivity", "Address updated: $newAddress")
+
+        })
+
     }
 
     fun populateInfo(){
@@ -68,6 +91,12 @@ class ProfileActivity : AppCompatActivity() {
                 val user = documentSnapshot.toObject(User::class.java)
                 binding.usernameET.setText(user?.username, TextView.BufferType.EDITABLE)
                 binding.emailET.setText(user?.email, TextView.BufferType.EDITABLE)
+                binding.baseET.setText(user?.localname, TextView.BufferType.EDITABLE)
+                val userAddress = binding.baseET.text.toString()
+                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("USER_ADDRESS", userAddress)
+                editor.apply()
                 if (!user?.imageUrl.isNullOrEmpty()) {
                     imageUrl = user?.imageUrl
                     binding.photoIV.loadUrl(imageUrl, R.drawable.logo)
@@ -84,9 +113,11 @@ class ProfileActivity : AppCompatActivity() {
         binding.profileProgressLayout.visibility = View.VISIBLE
         val username = binding.usernameET.text.toString()
         val email = binding.emailET.text.toString()
+        val localname = binding.baseET.text.toString()
         val map = HashMap<String,Any>()
         map[DATA_USER_USERNAME] = username
         map[DATA_USER_EMAIL] = email
+        map[DATA_USER_LOCALNAME] = localname
 
 
         //update the database

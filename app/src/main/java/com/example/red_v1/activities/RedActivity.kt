@@ -5,12 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import com.example.red_v1.MainViewModel
 import com.example.red_v1.R
 import com.example.red_v1.databinding.ActivityHomeBinding
 import com.example.red_v1.databinding.ActivityRedBinding
@@ -31,13 +34,14 @@ class RedActivity : AppCompatActivity() {
     private var imageUrl: String? = null
     private var userId:String? = null
     private var userName: String? =null
-
+    private lateinit var ViewModel :MainViewModel
 
     private lateinit var binding: ActivityRedBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRedBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         if(intent.hasExtra(PARAM_USER_ID) && intent.hasExtra(PARAM_USER_NAME)){
             userId = intent.getStringExtra((PARAM_USER_ID))
@@ -96,9 +100,17 @@ class RedActivity : AppCompatActivity() {
     fun postRed(v:View){
         binding.redProgressLayout.visibility = View.VISIBLE
         val text = binding.RedText.text.toString()
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val address = sharedPreferences.getString("USER_ADDRESS", "Default Address")
+        Log.d("ProfileActivity4", "User address: $address")
+        val postText = if (address != null) {
+            "$text —— Post from ${address}"
+        } else {
+            "$text"
+        }
         val redId = firebaseDB.collection(DATA_REDS).document()
         val hashtags = getHashtags(text)
-        val red = Red(redId.id, arrayListOf(userId!!),userName,text,imageUrl, System.currentTimeMillis(),hashtags,
+        val red = Red(redId.id, arrayListOf(userId!!),userName,postText,imageUrl, System.currentTimeMillis(),hashtags,
             arrayListOf()
         )
         redId.set(red).addOnCompleteListener { finish() }.addOnFailureListener { e ->
