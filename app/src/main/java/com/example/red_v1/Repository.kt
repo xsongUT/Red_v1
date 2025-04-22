@@ -4,96 +4,175 @@ package com.example.red_v1
 data class SongInfo(val name: String, val rawId: Int, val time: String,
     val uniqueId: Int)
 class Repository {
-    // This is long enough that it has to scroll
-    // I have a limited number of song files, so I use them twice
-    // Entries are distinguished with a different time value.
-    // To make list manipulation work, all entries must be distinct
     private var songResources = listOf(
                 SongInfo(
-                    "Dark Star",
-                    R.raw.dark_star_excerpt,
-                    "1:30",
+                    "Attention",
+                    R.raw.attention,
+                    "3:31",
                     0
                 ),
                 SongInfo(
-                    "What's Mine",
-                    R.raw.whats_mine_excerpt,
-                    "1:15",
+                    "Summer Wine",
+                    R.raw.summer_wine,
+                    "4:55",
                     1
                 ),
                 SongInfo(
-                    "La Fille Aux Cheveux De Lin",
-                    R.raw.debussy_la_fille_aux_cheveux_de_lin,
-                    "2:43",
+                    "Apologize",
+                    R.raw.apologize,
+                    "3:27",
                     2
                 ),
                 SongInfo(
-                    "Rondo Alla Turca",
-                    R.raw.rondo_alla_turca,
-                    "3:02",
+                    "There’s Nothing Holdin’ Me Back",
+                    R.raw.theres_nothing_holdin_me,
+                    "3:19",
                     3
                 ),
                 SongInfo(
-                    "Big Digits",
-                    R.raw.big_digits_excerpt,
-                    "0:49",
+                    "Young And Beautiful",
+                    R.raw.young_and_beautiful,
+                    "3:56",
                     4
                 ),
                 SongInfo(
-                    "Base after base",
-                    R.raw.base_after_base,
-                    "1:25",
+                    "Rolling In the Deep",
+                    R.raw.rolling_in_the_deep,
+                    "3:48",
                     5
                 ),
                 SongInfo(
-                    "Can't let go",
-                    R.raw.cant_let_go,
-                    "1:24",
+                    "Galway Girl",
+                    R.raw.galway_girl,
+                    "2:50",
                     6
                 ),
-        // Second set of songs, with two digit times
                 SongInfo(
-                    "Dark Star",
-                    R.raw.dark_star_excerpt,
-                    "1:30",
+                    "Stitches",
+                    R.raw.stitches,
+                    "3:26",
                     7
                 ),
                 SongInfo(
-                    "What's Mine",
-                    R.raw.whats_mine_excerpt,
-                    "1:15",
+                    "Faded",
+                    R.raw.faded,
+                    "3:32",
                     8
                 ),
                 SongInfo(
-                    "La Fille Aux Cheveux De Lin",
-                    R.raw.debussy_la_fille_aux_cheveux_de_lin,
-                    "2:43",
+                    "Dance Monkey",
+                    R.raw.dance_monkey,
+                    "3:29",
                     9
                 ),
                 SongInfo(
-                    "Rondo Alla Turca",
-                    R.raw.rondo_alla_turca,
-                    "3:02",
+                    "City of Stars",
+                    R.raw.city_of_stars,
+                    "2:34",
                     10
                 ),
                 SongInfo(
-                    "Big Digits",
-                    R.raw.big_digits_excerpt,
-                    "0:49",
+                    "Animals",
+                    R.raw.animals,
+                    "3:13",
                     11
                 ),
                 SongInfo(
-                    "Base after base",
-                    R.raw.base_after_base,
-                    "1:25",
+                    "Poker Face",
+                    R.raw.poker_face,
+                    "3:57",
                     12
                 ),
                 SongInfo(
-                    "Can't let go",
-                    R.raw.cant_let_go,
-                    "1:24",
+                    "Love Story",
+                    R.raw.love_story,
+                    "3:56",
                     13
-                )
+                ),
+        SongInfo(
+            "Attention",
+            R.raw.attention,
+            "3:31",
+            14
+        ),
+        SongInfo(
+            "Summer Wine",
+            R.raw.summer_wine,
+            "4:55",
+            15
+        ),
+        SongInfo(
+            "Apologize",
+            R.raw.apologize,
+            "3:27",
+            16
+        ),
+        SongInfo(
+            "There’s Nothing Holdin’ Me Back",
+            R.raw.theres_nothing_holdin_me,
+            "3:19",
+            17
+        ),
+        SongInfo(
+            "Young And Beautiful",
+            R.raw.young_and_beautiful,
+            "3:56",
+            18
+        ),
+        SongInfo(
+            "Rolling In the Deep",
+            R.raw.rolling_in_the_deep,
+            "3:48",
+            19
+        ),
+        SongInfo(
+            "Galway Girl",
+            R.raw.galway_girl,
+            "2:50",
+            20
+        ),
+        SongInfo(
+            "Stitches",
+            R.raw.stitches,
+            "3:26",
+            21
+        ),
+        SongInfo(
+            "Faded",
+            R.raw.faded,
+            "3:32",
+            22
+        ),
+        SongInfo(
+            "Dance Monkey",
+            R.raw.dance_monkey,
+            "3:29",
+            23
+        ),
+        SongInfo(
+            "City of Stars",
+            R.raw.city_of_stars,
+            "2:34",
+            24
+        ),
+        SongInfo(
+            "Animals",
+            R.raw.animals,
+            "3:13",
+            25
+        ),
+        SongInfo(
+            "Poker Face",
+            R.raw.poker_face,
+            "3:57",
+            26
+        ),
+        SongInfo(
+            "Love Story",
+            R.raw.love_story,
+            "3:56",
+            27
+        )
     )
     //EEE
     fun fetchData(): List<SongInfo> {
