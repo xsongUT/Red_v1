@@ -2,7 +2,6 @@ package com.example.red_v1.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
 import android.content.Intent
 import android.content.Context
 import android.util.Log

@@ -29,30 +29,11 @@ class MainActivity : AppCompatActivity() {
             view.tag = color
         }
     }
-    private fun initMenu() {
-        addMenuProvider(object : MenuProvider {
-            // XXX Write me, menu provider overrides
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.player_menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.action_settings -> {
-                        navController.navigate(R.id.action_playerFragment_to_settingsFragment)
-                        true
-                    }
-                    else -> false
-                }
-            }
-        })
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
-        initMenu()
         // Set up our nav graph
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)

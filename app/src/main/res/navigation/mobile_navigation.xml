@@ -20,14 +20,5 @@
         android:name="com.example.red_v1.fragments.PlayerFragment"
         android:label="Music Player"
         tools:layout="@layout/player_fragment" />
-    <action
-        android:id="@+id/action_playerFragment_to_settingsFragment"
-        app:destination="@id/settingsFragment" />
-
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.red_v1.fragments.SettingsFragment"
-        android:label="Settings"
-        tools:layout="@layout/settings_fragment" />
 
 </navigation>
