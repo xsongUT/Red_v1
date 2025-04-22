@@ -113,7 +113,7 @@
         app:layout_constraintBottom_toTopOf="@+id/fab"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/grid_3x"
-        app:backgroundTint="@color/black" />
+        app:srcCompat="@drawable/music_logo" />
 
     <FrameLayout
         android:id="@+id/fragment_container2"

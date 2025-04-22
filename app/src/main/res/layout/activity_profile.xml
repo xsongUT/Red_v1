@@ -113,7 +113,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_margin="@dimen/grid_3x"
-        app:backgroundTint="@color/blue" />
+        app:srcCompat="@drawable/find" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

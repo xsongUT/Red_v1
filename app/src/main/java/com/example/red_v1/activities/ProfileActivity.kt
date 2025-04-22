@@ -84,7 +84,10 @@ class ProfileActivity : AppCompatActivity() {
         })
 
     }
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        binding.fabMap.visibility = View.VISIBLE
+    }
     fun populateInfo(){
         binding.profileProgressLayout.visibility = View.VISIBLE
         firebaseDB.collection(DATA_USERS).document(userId!!).get()

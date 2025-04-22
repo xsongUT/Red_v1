@@ -80,6 +80,7 @@ class HomeActivity : AppCompatActivity(), HomeCallback {
 
         binding.fabMusic.setOnClickListener {
             // Replace the current fragment with PlayerFragment
+            binding.fabMusic.visibility = View.GONE
             val playerFragment = PlayerFragment()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container2, playerFragment)  // Replace the container with PlayerFragment
@@ -137,7 +138,10 @@ class HomeActivity : AppCompatActivity(), HomeCallback {
     }
 
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        binding.fabMusic.visibility = View.VISIBLE
+    }
 
 
     //keep monitoring the current user, if it is signed out return to the login page
