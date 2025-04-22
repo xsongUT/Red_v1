@@ -58,7 +58,7 @@ class HomeActivity : AppCompatActivity(), HomeCallback {
         container.adapter = sectionPagerAdapter
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
-
+        // define three tabs/pages to represent three different pages/windows
         // Add tabs
         val tabHome = tabLayout.newTab().setIcon(R.drawable.selector_home)
         tabHome.contentDescription = "Home"
@@ -72,7 +72,7 @@ class HomeActivity : AppCompatActivity(), HomeCallback {
         tabActivity.contentDescription = "My Activity"
         tabLayout.addTab(tabActivity)
 
-
+        //link the postion of tags to windows
         tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
         tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -127,7 +127,7 @@ class HomeActivity : AppCompatActivity(), HomeCallback {
 
 
 
-
+    //keep monitoring the current user, if it is signed out return to the login page
     override fun onResume() {
         super.onResume()
         userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -135,7 +135,6 @@ class HomeActivity : AppCompatActivity(), HomeCallback {
             startActivity(LoginActivity.newIntent(this))
             finish()
         } else {
-
             populate()
         }
     }
@@ -150,7 +149,7 @@ class HomeActivity : AppCompatActivity(), HomeCallback {
 
     fun populate(){
         binding.homeProgressLayout.visibility = View.VISIBLE
-
+        //load the info from database
         firebaseDB.collection(DATA_USERS).document(userId!!).get()
             .addOnSuccessListener { documentSnapshot ->
                 binding.homeProgressLayout.visibility = View.GONE
