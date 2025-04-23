@@ -1,16 +1,14 @@
 # Final Project: MusicpRed
 
-Name:  Xi Song
+Team member Names:  Xi Song, Shugang Qi
 
-EID:  XS3873
+EID:  xs3873, sq3359
 
-Email:  xisong@utexas.edu
+Email:  xisong@utexas.edu, aaron.sg.qi@utexas.edu
 
-How many hours you worked on this assignment:  40
+How many hours you worked on this assignment:  80
 
 Slip days:  
-
-Collaborators:  Shugang Qi
 
 AI contributions:  LLM help me design the logo and layout, also fix bugs in the code.
 
