@@ -43,6 +43,7 @@ class RedActivity : AppCompatActivity() {
         setContentView(binding.root)
         ViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        // Retrieve user info from intent extras
         if(intent.hasExtra(PARAM_USER_ID) && intent.hasExtra(PARAM_USER_NAME)){
             userId = intent.getStringExtra((PARAM_USER_ID))
             userName = intent.getStringExtra(PARAM_USER_NAME)
@@ -50,14 +51,17 @@ class RedActivity : AppCompatActivity() {
             Toast.makeText(this,"Error creating RedPost", Toast.LENGTH_SHORT).show()
             finish()
         }
+        // Disable user interaction when the progress overlay is shown
         binding.redProgressLayout.setOnTouchListener { v, event -> true }
     }
 
+    //Launch image picker to choose an image from gallery
     fun addImage(v: View){
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, REQUEST_CODE_PHOTO)
     }
+    //Handle result from image picker
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
@@ -70,6 +74,7 @@ class RedActivity : AppCompatActivity() {
     }
 
 
+    //Uploads the selected image to Firebase Storage and updates UI
     fun storeImage(imageUri:Uri?){
         //load image to firebase
         imageUri?.let{
@@ -78,6 +83,7 @@ class RedActivity : AppCompatActivity() {
 
             val filePath = firebaseStorage.child(DATA_IMAGES).child(userId!!)
             filePath.putFile(imageUri).addOnSuccessListener {
+                //// Retrieve the download URL
                 filePath.downloadUrl.addOnSuccessListener {uri ->
                             imageUrl = uri.toString()
                             binding.redImage.loadUrl(imageUrl, R.drawable.logo)
@@ -92,11 +98,16 @@ class RedActivity : AppCompatActivity() {
         }
     }
 
+    // Handle image upload failure
     fun onUploadFailure(){
         Toast.makeText(this, "Image upload failed. Please try again later.", Toast.LENGTH_SHORT).show()
         binding.redProgressLayout.visibility = View.GONE
     }
 
+    /**
+     * Called when user clicks post button
+     * Creates a new Red object and stores it in Firestore
+     */
     fun postRed(v:View){
         binding.redProgressLayout.visibility = View.VISIBLE
         val text = binding.RedText.text.toString()
@@ -109,11 +120,21 @@ class RedActivity : AppCompatActivity() {
             "$text"
         }
         val redId = firebaseDB.collection(DATA_REDS).document()
+        // Extract hashtags from the post
         val hashtags = getHashtags(text)
+<<<<<<< HEAD
         val red = Red(redId.id, arrayListOf(userId!!),userName,postText,imageUrl, System.currentTimeMillis(),hashtags,
             arrayListOf()
+=======
+        // Create Red post object
+        val red = Red(redId.id, arrayListOf(userId!!),userName,text,imageUrl, System.currentTimeMillis(),hashtags,
+            arrayListOf() // No likes initially
+>>>>>>> 7b08c2e (add more comments)
         )
-        redId.set(red).addOnCompleteListener { finish() }.addOnFailureListener { e ->
+        // Save to Firestore
+        redId.set(red).addOnCompleteListener {
+            finish() }// Close activity on success
+            .addOnFailureListener { e ->
             e.printStackTrace()
             binding.redProgressLayout.visibility = View.GONE
             Toast.makeText(this, "Failed to post",Toast.LENGTH_SHORT).show()
@@ -121,6 +142,7 @@ class RedActivity : AppCompatActivity() {
 
     }
 
+    //Parses hashtags from the text content of a Red
     fun getHashtags(source:String): ArrayList<String>{
         val hashtages:ArrayList<String> = arrayListOf<String>()
         var text = source
@@ -142,6 +164,7 @@ class RedActivity : AppCompatActivity() {
                 hashtag = text.substring(0,firstHash)
                 text = text.substring(firstHash)
             }
+            // Add to list if not empty
             if(!hashtag.isNullOrEmpty()){
                 hashtages.add(hashtag)
             }
@@ -152,8 +175,10 @@ class RedActivity : AppCompatActivity() {
 
 
     companion object {
+        // Keys for intent extras
         val PARAM_USER_ID = "UserId"
         val PARAM_USER_NAME = "UserName"
+        //Helper to launch RedActivity with user data
         fun newIntent(context: Context, userId:String?, userName:String?): Intent {
             val intent = Intent(context, RedActivity::class.java)
             intent.putExtra(PARAM_USER_ID, userId)

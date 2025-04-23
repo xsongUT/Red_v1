@@ -52,16 +52,19 @@ class SearchFragment : RedFragment() {
         listener = RedListenerImpl(binding.redList,currentUser,callback)
         redsAdapter = RedListAdapter(userId!!, arrayListOf())
         redsAdapter?.setListener(listener)
+
+        // Setup the RecyclerView
         binding.redList?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = redsAdapter
             addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
         }
-
+        // Handle swipe-to-refresh
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
             updateList()
         }
+        // Handle follow/unfollow hashtag click
         binding.followHashtag.setOnClickListener{
             binding.followHashtag.isClickable = false
             val followed = currentUser?.followHashtags
@@ -71,6 +74,7 @@ class SearchFragment : RedFragment() {
                 followed?.add(currentHashtag)
             }
 
+            // Update the user's followed hashtags in Firestore
             firebaseDB.collection(DATA_USERS).document(userId).update(DATA_USER_HASTAGS,followed)
                     .addOnSuccessListener {
                         callback?.onUserUpdated()
@@ -84,6 +88,7 @@ class SearchFragment : RedFragment() {
         }
     }
 
+    // Clear binding when the view is destroyed to avoid memory leaks
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -91,12 +96,14 @@ class SearchFragment : RedFragment() {
 
 
 
+    // Called from outside to start a new hashtag search
     fun newHashtag(term:String){
         currentHashtag = term
         binding.followHashtag.visibility = View.VISIBLE
         updateList()
     }
 
+    // Fetch and display posts that contain the current hashtag
     override  fun updateList(){
         binding.redList?.visibility = View.GONE
         firebaseDB.collection(DATA_REDS).whereArrayContains(DATA_RED_HASHTAGS,currentHashtag).get()
@@ -107,15 +114,18 @@ class SearchFragment : RedFragment() {
                     val red = document.toObject(Red::class.java)
                     red?.let{reds.add(it)}
                 }
+                // Sort posts by timestamp (latest first) and update the adapter
                 val sortedReds: List<Red> = reds.sortedWith(compareByDescending { it.timestamp })
                 redsAdapter?.updateReds(sortedReds)
             }
             .addOnFailureListener { e ->
                 e.printStackTrace()
             }
+        // Update the follow icon depending on current follow status
         updateFollowDrawable()
     }
 
+    // Update the follow/unfollow icon based on whether the current hashtag is followed
     private fun updateFollowDrawable(){
         hashtagFollowed = currentUser?.followHashtags?.contains(currentHashtag) == true
         context?.let{

@@ -35,11 +35,13 @@ import com.example.red_v1.util.DATA_USER_LOCALNAME
 
 class ProfileActivity : AppCompatActivity() {
 
+    // Firebase setup
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firebaseDB = FirebaseFirestore.getInstance()
     private val firebaseStorage = FirebaseStorage.getInstance().reference
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private lateinit var binding: ActivityProfileBinding
+    // Holds user's image URL
     private var imageUrl: String? = null
 //    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
 
@@ -50,20 +52,21 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         val profileProgressLayout = binding.profileProgressLayout
-
+        // If no user is logged in, exit the activity
         if(userId == null){
             finish()
         }
+        // Prevent interaction when progress layout is visible
         profileProgressLayout.setOnTouchListener{v,event -> true}
 
+        // Set image picker intent on profile photo click
         binding.photoIV.setOnClickListener{
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, REQUEST_CODE_PHOTO)
         }
+        // Populate the user profile with current data
         populateInfo()
         binding.fabMap.setOnClickListener {
             binding.fabMap.visibility = View.GONE
@@ -88,6 +91,8 @@ class ProfileActivity : AppCompatActivity() {
         super.onBackPressed()
         binding.fabMap.visibility = View.VISIBLE
     }
+
+    //Loads user data from Firestore and displays it in the UI
     fun populateInfo(){
         binding.profileProgressLayout.visibility = View.VISIBLE
         firebaseDB.collection(DATA_USERS).document(userId!!).get()
@@ -101,6 +106,7 @@ class ProfileActivity : AppCompatActivity() {
                 val editor = sharedPreferences.edit()
                 editor.putString("USER_ADDRESS", userAddress)
                 editor.apply()
+                // Load profile image if exists
                 if (!user?.imageUrl.isNullOrEmpty()) {
                     imageUrl = user?.imageUrl
                     binding.photoIV.loadUrl(imageUrl, R.drawable.logo)
@@ -108,11 +114,12 @@ class ProfileActivity : AppCompatActivity() {
                 binding.profileProgressLayout.visibility = View.GONE
             }.addOnFailureListener{e ->
                 e.printStackTrace()
-                finish()
+                finish() // Exit on failure
             }
 
     }
 
+    //Called when "Apply" button is clicked to save profile changes
     fun onApply(v: View){
         binding.profileProgressLayout.visibility = View.VISIBLE
         val username = binding.usernameET.text.toString()
@@ -139,6 +146,7 @@ class ProfileActivity : AppCompatActivity() {
 
     }
 
+    //Callback for image picker result
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
@@ -150,16 +158,20 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    //Uploads selected image to Firebase Storage and updates Firestore
     fun storeImage(imageUri:Uri?){
         //load image to firebase
         imageUri?.let{
             Toast.makeText(this,"Uploading...",Toast.LENGTH_SHORT).show()
             binding.profileProgressLayout.visibility = View.VISIBLE
 
+            //// Save image in Firebase Storage under /images/{userId}
             val filePath = firebaseStorage.child(DATA_IMAGES).child(userId!!)
             filePath.putFile(imageUri).addOnSuccessListener {
+                //// Get the download URL of the uploaded image
                 filePath.downloadUrl.addOnSuccessListener {uri ->
                     val url = uri.toString()
+                    // Save image URL in Firestore
                     firebaseDB.collection(DATA_USERS).document(userId!!).update(DATA_USER_IMAGE_URL,url)
                         .addOnSuccessListener {
                             imageUrl = url
@@ -175,19 +187,23 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    //Called when image upload fails
     fun onUploadFailure(){
         Toast.makeText(this, "Image upload failed. Please try again later.", Toast.LENGTH_SHORT).show()
         binding.profileProgressLayout.visibility = View.GONE
     }
 
+    //Called when user clicks "Sign Out"
     fun onSignout(v:View){
         firebaseAuth.signOut()
+        // Clear task and go back to login
         val login_intent = Intent(this, LoginActivity::class.java)
         login_intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(login_intent)
         //finish()
     }
 
+    //Helper function to create intent to launch this activity
     companion object{
         fun newIntent(context: Context): Intent = Intent(context, ProfileActivity::class.java)
     }

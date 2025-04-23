@@ -21,6 +21,7 @@ class SignupActivity : AppCompatActivity() {
     private val firebaseDB = FirebaseFirestore.getInstance()
 
     private val firestoreAuth = FirebaseAuth.getInstance()
+    // Auth listener to automatically navigate to Home if user is already logged in
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
         val user = firestoreAuth.currentUser?.uid
         user?.let{
@@ -34,14 +35,17 @@ class SignupActivity : AppCompatActivity() {
         //setContentView((R.layout.activity_signup))
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Enable dynamic error handling
         setTextChangeListener(binding.usernameET,binding.usernameTIL)
         setTextChangeListener(binding.emailET,binding.emailTIL)
         setTextChangeListener(binding.passwordET,binding.passwordTIL)
 
+        // Disable interaction with screen when progress layout is visible
         binding.signupProgressLayout.setOnTouchListener { v, event -> true }
 
     }
 
+    //Clear error when the user starts typing again in a text field
     fun setTextChangeListener(et: EditText, til: TextInputLayout){
         et.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -75,15 +79,17 @@ class SignupActivity : AppCompatActivity() {
             binding.passwordTIL.isErrorEnabled = true
             proceed=false
         }
+        // If all fields are valid, proceed to sign up
         if(proceed){
             binding.signupProgressLayout.visibility = View.VISIBLE
             firestoreAuth.createUserWithEmailAndPassword(binding.emailET.text.toString(), binding.passwordET.text.toString())
                 .addOnCompleteListener{task ->
                     if(!task.isSuccessful){
+                        // Show error if sign-up failed
                         Toast.makeText(this@SignupActivity,"Signup error: ${task.exception?.localizedMessage}",
                             Toast.LENGTH_SHORT).show()
                     }
-                    else{
+                    else{ // Create a new user document in Firestore
                         val email = binding.emailET.text.toString()
                         val name = binding.usernameET.text.toString()
                         val user = User(email, name, "", "",arrayListOf(), arrayListOf())
@@ -91,7 +97,7 @@ class SignupActivity : AppCompatActivity() {
                     }
                     binding.signupProgressLayout.visibility =View.GONE
                 }
-                .addOnFailureListener{ e ->
+                .addOnFailureListener{ e -> // Handle unexpected failures
                     e.printStackTrace()
                     binding.signupProgressLayout.visibility=View.GONE
 
@@ -100,22 +106,26 @@ class SignupActivity : AppCompatActivity() {
 
     }
 
+    //Navigate to the Login screen if the user already has an account
     fun goToLogin(v:View){
         startActivity(LoginActivity.newIntent(this))
         finish()
     }
 
+    // Add auth state listener when activity is visible
     override fun onStart() {
         super.onStart()
         firestoreAuth.addAuthStateListener(firebaseAuthListener)
     }
 
+    // Remove auth state listener to avoid memory leaks
     override fun onStop() {
         super.onStop()
         firestoreAuth.removeAuthStateListener(firebaseAuthListener)
     }
 
     companion object{
+        // Helper function to create intent to launch this activity
         fun newIntent(context: Context): Intent = Intent(context, SignupActivity::class.java)
     }
 }

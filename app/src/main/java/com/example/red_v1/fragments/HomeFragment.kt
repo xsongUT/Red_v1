@@ -35,16 +35,20 @@ class HomeFragment : RedFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Listener for item interactions (like, repost, follow)
         listener = RedListenerImpl(binding.redList,currentUser,callback)
 
+        // Adapter setup with current user's ID
         redsAdapter = RedListAdapter(userId!!, arrayListOf())
         redsAdapter?.setListener(listener)
+        // Configure RecyclerView
         binding.redList?.apply {
             layoutManager=LinearLayoutManager(context)
             adapter = redsAdapter
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
+        // Pull-to-refresh action
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
             updateList()
@@ -54,10 +58,12 @@ class HomeFragment : RedFragment() {
 
     }
 
+    // Fetches and updates the list of reds based on followed users and hashtags
     override fun updateList() {
         binding.redList?.visibility =View.GONE
         currentUser?.let{
             val reds = arrayListOf<Red>()
+            // Get posts by hashtags the user follows
             for(hashtag in it.followHashtags!!){
                 firebaseDB.collection(DATA_REDS).whereArrayContains(DATA_RED_HASHTAGS,hashtag).get()
                     .addOnSuccessListener { list ->
@@ -76,6 +82,7 @@ class HomeFragment : RedFragment() {
                         binding.redList?.visibility = View.VISIBLE
                     }
             }
+            // Get posts posted or reposted by followed users
             for (followUser in it.followUsers!!){
                 firebaseDB.collection(DATA_REDS).whereArrayContains(DATA_RED_USER_IDS,followUser).get()
                     .addOnSuccessListener { list ->
@@ -98,10 +105,12 @@ class HomeFragment : RedFragment() {
 
     }
 
+    // Updates the adapter with sorted and deduplicated posts
     private fun updateAdapter(reds: List<Red>){
         val sortedReds = reds.sortedWith(compareByDescending { it.timestamp })
         redsAdapter?.updateReds((removeDuplicates(sortedReds)))
     }
+    // Removes duplicate posts based on their unique redId
     private fun removeDuplicates(originalList:List<Red>) =originalList.distinctBy { it.redId }
 
 }

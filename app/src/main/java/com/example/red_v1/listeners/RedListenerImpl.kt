@@ -13,17 +13,21 @@ import com.example.red_v1.util.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
+// Listener implementation that handles user interactions with Red items (e.g., follow/unfollow, like, repost)
 class RedListenerImpl(val redList: RecyclerView, var user: User?, val callback: HomeCallback?) :
     RedListener {
     private val firebaseDB = FirebaseFirestore.getInstance()
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
 
+    // Called when a Red layout is clicked (used to follow/unfollow user)
     override fun onLayoutClick(red: Red?) {
         red?.let {
             val owner = red.userIds?.get(0)
+            // Check if clicked red is not from current user
             if (owner != userId) {
                 if (user?.followUsers?.contains(owner) == true) {
+                    // Prompt user to unfollow
                     AlertDialog.Builder(redList.context)
                         .setTitle("Unfollow ${red.username}?")
                         .setPositiveButton("yes") { dialog, which ->
@@ -47,6 +51,7 @@ class RedListenerImpl(val redList: RecyclerView, var user: User?, val callback: 
                         .setNegativeButton("cancel") { dialg, which -> }
                         .show()
                 } else {
+                    // Prompt user to follow
                     AlertDialog.Builder(redList.context)
                         .setTitle("Follow ${red.username}?")
                         .setPositiveButton("yes") { dialog, which ->
@@ -57,6 +62,7 @@ class RedListenerImpl(val redList: RecyclerView, var user: User?, val callback: 
                             }
                             owner?.let {
                                 followedUsers?.add(owner)
+                                // Update Firestore with new follow list
                                 firebaseDB.collection(DATA_USERS).document(userId!!).update(
                                     DATA_USER_FOLLOW, followedUsers
                                 )
@@ -76,13 +82,16 @@ class RedListenerImpl(val redList: RecyclerView, var user: User?, val callback: 
         }
     }
 
+    // Called when a Red is liked/unliked
     override fun onLike(red: Red?) {
         red?.let {
             redList.isClickable = false
             val likes = red.likes
             if (red.likes?.contains(userId) == true) {
+                // Unlike
                 likes?.remove(userId)
             } else {
+                // Unlike
                 likes?.add(userId!!)
             }
             firebaseDB.collection(DATA_REDS).document(red.redId!!).update(DATA_REDS_LIKES, likes)
@@ -96,13 +105,16 @@ class RedListenerImpl(val redList: RecyclerView, var user: User?, val callback: 
         }
     }
 
+    // Called when a post is reposted/un-reposted
     override fun onRepost(red: Red?) {
         red?.let {
             redList.isClickable = false
             val reposts = red.userIds
             if (reposts?.contains(userId) == true) {
+                // Remove repost
                 reposts?.remove(userId)
             } else {
+                // Add repost
                 reposts?.add(userId!!)
             }
             firebaseDB.collection(DATA_REDS).document(red.redId!!)
