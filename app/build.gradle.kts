@@ -82,6 +82,8 @@ dependencies {
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("com.google.firebase:firebase-common:20.4.2")
 
+
+
     implementation ("com.google.android.gms:play-services-maps:19.1.0")
     implementation ("androidx.navigation:navigation-fragment-ktx:2.8.5")
     implementation ("androidx.navigation:navigation-ui-ktx:2.8.5")

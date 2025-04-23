@@ -10,7 +10,8 @@
    -->
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
         <!-- Please get your own API key from Google and copy it here. -->
-        AIzaSyB8pnGx0_0_Aaxv9NfMvIcU6Bi-ut12my4
+        AIzaSyCfVuWsGYOHuHbzmdUfAgxJf6LpAkpbSgU
+
         <!-- See above directions and course videos -->
     </string>
 </resources>

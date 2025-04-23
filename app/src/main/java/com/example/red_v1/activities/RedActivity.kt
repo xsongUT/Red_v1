@@ -122,14 +122,10 @@ class RedActivity : AppCompatActivity() {
         val redId = firebaseDB.collection(DATA_REDS).document()
         // Extract hashtags from the post
         val hashtags = getHashtags(text)
-<<<<<<< HEAD
-        val red = Red(redId.id, arrayListOf(userId!!),userName,postText,imageUrl, System.currentTimeMillis(),hashtags,
-            arrayListOf()
-=======
         // Create Red post object
-        val red = Red(redId.id, arrayListOf(userId!!),userName,text,imageUrl, System.currentTimeMillis(),hashtags,
+        val red = Red(redId.id, arrayListOf(userId!!),userName,postText,imageUrl, System.currentTimeMillis(),hashtags,
             arrayListOf() // No likes initially
->>>>>>> 7b08c2e (add more comments)
+
         )
         // Save to Firestore
         redId.set(red).addOnCompleteListener {
