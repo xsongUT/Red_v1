@@ -1,12 +1,12 @@
-# Final Project: MusicpRed
+# Final Project: MusicRed
 
-Team member Names:  Xi Song, Shugang Qi
+Team member Names:  Xi Song, Shuguang Qi
 
 EID:  xs3873, sq3359
 
 Email:  xisong@utexas.edu, aaron.sg.qi@utexas.edu
 
-How many hours you worked on this assignment:  80
+How many hours you worked on this assignment:  82
 
 Slip days:  
 
